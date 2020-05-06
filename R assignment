@@ -1,0 +1,71 @@
+  ## These functions are used to cache the inverse of a matrix. As long as the matrix does not change, the inverse can be 
+	## retrieved from the cache without recomputing it.
+	## This function takes a matrix as input.  It outputs a list object of four functions:
+	##   set - store (redefine) the matrix
+	##   get - get the matrix
+	##   setInv - store the inverse of the matrix
+	##   getInv - return the inverse of the matrix (or null if not yet calculated)
+
+#Caching the Mean of a Vector
+
+makeVector <- function(x = numeric()) {
+        m <- NULL
+        set <- function(y) {
+                x <<- y
+                m <<- NULL
+        }
+        get <- function() x
+        setmean <- function(mean) m <<- mean
+        getmean <- function() m
+        list(set = set, get = get,
+             setmean = setmean,
+             getmean = getmean)
+}
+cachemean <- function(x, ...) {
+        m <- x$getmean()
+        if(!is.null(m)) {
+                message("getting cached data")
+                return(m)
+        }
+        data <- x$get()
+        m <- mean(data, ...)
+        x$setmean(m)
+        m
+}
+
+
+#Caching the Inverse of a Matrix
+#makeCacheMatrix
+
+makeCacheMatrix <- function(x = matrix()) {
+  inv <- NULL
+  set <- function(y){
+    x <<- y
+    inv <<- NULL
+  }
+  get <- function() x
+  setInverse <- function(solveMatrix) inv <<- solveMatrix
+  getInverse <- function() inv
+  list(set = set, get = get, setInverse = setInverse, getInverse = getInverse)
+}
+             
+## This function checks to see if the matrix inverse has been calculated, and returns it from the cache (with a message) if it has.
+## If the inverse has not been calculated, it calculates it, caches it, and returns it.
+#cacheSolve
+
+cacheSolve <- function(x, ...) {
+  ## Return a matrix that is the inverse of 'x'
+  inv <- x$getInverse()
+  if(!is.null(inv)){
+    message("getting cached data")
+    return(inv)
+  }
+  data <- x$get()
+  inv <- solve(data)
+  x$setInverse(inv)
+  inv      
+}
+
+
+
+
